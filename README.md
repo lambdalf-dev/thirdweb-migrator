@@ -38,6 +38,13 @@ To run coverage, run the following commands:
 
 - `yarn coverage` runs a coverage report and generates an html coverage report
 
+### Deployment
+
+To deploy, run the following:
+
+- `yarn deploy:goerli` deploys on Goerli testnet, this will also deploy a mock Thirdweb contract and a first clone targeting that mock contract
+- `yarn deploy:mainnet` deploys on Ethereum mainnet, this will only deploy the Migrated721 implementation and factory
+
 ## Contents
 
 - `src`: The list of contracts included in the library.

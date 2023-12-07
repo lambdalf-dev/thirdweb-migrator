@@ -15,9 +15,16 @@ import {IERC721Metadata} from '@lambdalf-dev/ethereum-contracts/contracts/interf
 import {IERC721Enumerable} from '@lambdalf-dev/ethereum-contracts/contracts/interfaces/IERC721Enumerable.sol';
 import {IERC721Receiver} from '@lambdalf-dev/ethereum-contracts/contracts/interfaces/IERC721Receiver.sol';
 import {IERC2981} from '@lambdalf-dev/ethereum-contracts/contracts/interfaces/IERC2981.sol';
-import { BitMaps } from "@openzeppelin/contracts/utils/structs/BitMaps.sol";
+import {BitMaps} from '@openzeppelin/contracts/utils/structs/BitMaps.sol';
 
-contract Migrated721 is IERC165, ERC173Initializable, ERC2981Initializable, IERC721, IERC721Metadata, IERC721Enumerable {
+contract Migrated721 is
+  IERC165,
+  ERC173Initializable,
+  ERC2981Initializable,
+  IERC721,
+  IERC721Metadata,
+  IERC721Enumerable
+{
   // **************************************
   // *****           ERRORS           *****
   // **************************************
@@ -173,6 +180,7 @@ contract Migrated721 is IERC165, ERC173Initializable, ERC2981Initializable, IERC
   /// - `to_` must not be the zero address.
   /// - If `to_` is a contract, it must implement {IERC721Receiver-onERC721Received} with a return value of `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`,
   /// - Must emit a {Transfer} event.
+
   function safeTransferFrom(address from_, address to_, uint256 tokenId_, bytes memory data_) public virtual override {
     transferFrom(from_, to_, tokenId_);
     if (!_checkOnERC721Received(from_, to_, tokenId_, data_)) {
@@ -187,6 +195,7 @@ contract Migrated721 is IERC165, ERC173Initializable, ERC2981Initializable, IERC
   /// Requirements:
   ///
   /// - Must emit an {ApprovalForAll} event.
+
   function setApprovalForAll(address operator_, bool approved_) public virtual override {
     if (operator_ == msg.sender) {
       revert IERC721_INVALID_APPROVAL();
@@ -207,6 +216,7 @@ contract Migrated721 is IERC165, ERC173Initializable, ERC2981Initializable, IERC
   /// - The caller must own the token or be an approved operator.
   /// - `to_` must not be the zero address.
   /// - Must emit a {Transfer} event.
+
   function transferFrom(address from_, address to_, uint256 tokenId_) public virtual override {
     if (to_ == address(0)) {
       revert IERC721_INVALID_RECEIVER(to_);
@@ -230,9 +240,10 @@ contract Migrated721 is IERC165, ERC173Initializable, ERC2981Initializable, IERC
   ///
   /// - `tokenId_` must exist
   /// - The caller must own `tokenId_` or be an approved operator
+
   function burn(uint256 tokenId_) public {
     address _tokenOwner_ = ownerOf(tokenId_);
-    if (! _isApprovedOrOwner(_tokenOwner_, msg.sender, tokenId_)) {
+    if (!_isApprovedOrOwner(_tokenOwner_, msg.sender, tokenId_)) {
       revert IERC721_CALLER_NOT_APPROVED(msg.sender, tokenId_);
     }
     BitMaps.set(_burned, tokenId_);
@@ -453,7 +464,7 @@ contract Migrated721 is IERC165, ERC173Initializable, ERC2981Initializable, IERC
     uint256 _index_ = _supplyMinted_;
     supply = _supplyMinted_;
     while (_index_ > 0) {
-      if (! _exists(_index_)) {
+      if (!_exists(_index_)) {
         unchecked {
           --supply;
         }
@@ -581,7 +592,7 @@ contract Migrated721 is IERC165, ERC173Initializable, ERC2981Initializable, IERC
   /// @return tokenExist whether the token exists
 
   function _exists(uint256 tokenId_) internal view virtual returns (bool tokenExist) {
-    return ! BitMaps.get(_burned, tokenId_) && tokenId_ < _nextId;
+    return !BitMaps.get(_burned, tokenId_) && tokenId_ < _nextId;
   }
   /// @dev Internal function returning whether `operator_` is allowed to handle `tokenId_`
   ///

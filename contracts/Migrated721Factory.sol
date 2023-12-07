@@ -5,7 +5,6 @@ pragma solidity >=0.8.4 <0.9.0;
 import {Migrated721} from './Migrated721.sol';
 
 contract Migrated721Factory {
-
   address[] public proxies;
 
   function deployClone(
@@ -23,15 +22,13 @@ contract Migrated721Factory {
     bytes20 implementationContractInBytes = bytes20(implementationContract_);
     //address to assign a cloned proxy
     address proxy;
-    
-  
+
     // as stated earlier, the minimal proxy has this bytecode
     // <3d602d80600a3d3981f3363d3d373d3d3d363d73><address of implementation contract><5af43d82803e903d91602b57fd5bf3>
 
     // <3d602d80600a3d3981f3> == creation code which copies runtime code into memory and deploys it
 
     // <363d3d373d3d3d363d73> <address of implementation contract> <5af43d82803e903d91602b57fd5bf3> == runtime code that makes a delegatecall to the implentation contract
- 
 
     assembly {
       /*
@@ -41,10 +38,7 @@ contract Migrated721Factory {
       */
       let clone := mload(0x40)
       // store 32 bytes to memory starting at "clone"
-      mstore(
-        clone,
-        0x3d602d80600a3d3981f3363d3d373d3d3d363d73000000000000000000000000
-      )
+      mstore(clone, 0x3d602d80600a3d3981f3363d3d373d3d3d363d73000000000000000000000000)
 
       /*
         |              20 bytes                |
@@ -64,34 +58,23 @@ contract Migrated721Factory {
       */
       // store 32 bytes to memory starting at "clone" + 40 bytes
       // 0x28 = 40
-      mstore(
-        add(clone, 0x28),
-        0x5af43d82803e903d91602b57fd5bf30000000000000000000000000000000000
-      )
+      mstore(add(clone, 0x28), 0x5af43d82803e903d91602b57fd5bf30000000000000000000000000000000000)
 
       /*
       |                 20 bytes                  |          20 bytes          |           15 bytes          |
       0x3d602d80600a3d3981f3363d3d373d3d3d363d73b<implementationContractInBytes>5af43d82803e903d91602b57fd5bf3 == 45 bytes in total
       */
-      
-      
+
       // create a new contract
       // send 0 Ether
       // code starts at the pointer stored in "clone"
       // code size == 0x37 (55 bytes)
       proxy := create(0, clone, 0x37)
     }
-    
+
     // Call initialization
     Migrated721(payable(proxy)).initialize(
-      admin_,
-      asset_,
-      royaltyRecipient_,
-      royaltyRate_,
-      supply_,
-      name_,
-      symbol_,
-      baseUri_
+      admin_, asset_, royaltyRecipient_, royaltyRate_, supply_, name_, symbol_, baseUri_
     );
     proxies.push(proxy);
     return proxy;

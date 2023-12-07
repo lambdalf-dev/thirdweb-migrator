@@ -63,28 +63,23 @@ contract Deployed is TestHelper, IERC173Events, IERC721Events {
     }
 
     implementation = new Migrated721();
-    implementation.initialize(
-      address(0),
-      address(0),
-      address(0),
-      0,
-      0,
-      "",
-      "",
-      ""
-    );
+    implementation.initialize(address(0), address(0), address(0), 0, 0, '', '', '');
     factory = new Migrated721Factory();
-    testContract = Migrated721(payable(factory.deployClone(
-      address(implementation),
-      address(this),
-      address(underlyingAsset),
-      ROYALTY_RECIPIENT.addr,
-      ROYALTY_RATE,
-      MINTED_SUPPLY,
-      NAME,
-      SYMBOL,
-      BASE_URI
-    )));
+    testContract = Migrated721(
+      payable(
+        factory.deployClone(
+          address(implementation),
+          address(this),
+          address(underlyingAsset),
+          ROYALTY_RECIPIENT.addr,
+          ROYALTY_RATE,
+          MINTED_SUPPLY,
+          NAME,
+          SYMBOL,
+          BASE_URI
+        )
+      )
+    );
   }
 
   function _approveFixture(address account) internal {
@@ -137,32 +132,24 @@ contract Unit_burn is Deployed {
     vm.expectRevert();
     testContract.burn(tokenId);
   }
+
   function test_revertWhen_operator_isNotApproved() public {
     address operator = OPERATOR.addr;
     uint256 tokenId = TARGET_TOKEN;
     vm.prank(operator);
-    vm.expectRevert(
-      abi.encodeWithSelector(
-        IERC721.IERC721_CALLER_NOT_APPROVED.selector,
-        operator,
-        tokenId
-      )
-    );
+    vm.expectRevert(abi.encodeWithSelector(IERC721.IERC721_CALLER_NOT_APPROVED.selector, operator, tokenId));
     testContract.burn(tokenId);
   }
+
   function test_revertWhen_token_isBurned() public {
     address operator = ALICE.addr;
     uint256 tokenId = TARGET_TOKEN;
     _burnFixture();
     vm.prank(operator);
-    vm.expectRevert(
-      abi.encodeWithSelector(
-        IERC721.IERC721_NONEXISTANT_TOKEN.selector,
-        tokenId
-      )
-    );
+    vm.expectRevert(abi.encodeWithSelector(IERC721.IERC721_NONEXISTANT_TOKEN.selector, tokenId));
     testContract.burn(tokenId);
   }
+
   function test_emitTransferEventWhen_caller_isTokenOwner() public {
     address operator = ALICE.addr;
     address tokenOwner = ALICE.addr;
@@ -171,12 +158,9 @@ contract Unit_burn is Deployed {
     vm.expectEmit(address(testContract));
     emit Transfer(tokenOwner, address(0), tokenId);
     testContract.burn(tokenId);
-    assertEq(
-      testContract.balanceOf(tokenOwner),
-      ALICE_SUPPLY - BURNED_SUPPLY,
-      "invalid balance after burn"
-    );
+    assertEq(testContract.balanceOf(tokenOwner), ALICE_SUPPLY - BURNED_SUPPLY, 'invalid balance after burn');
   }
+
   function test_emitTransferEventWhen_caller_isIndividuallyApproved() public {
     address operator = OPERATOR.addr;
     address tokenOwner = ALICE.addr;
@@ -186,12 +170,9 @@ contract Unit_burn is Deployed {
     vm.expectEmit(address(testContract));
     emit Transfer(tokenOwner, address(0), tokenId);
     testContract.burn(tokenId);
-    assertEq(
-      testContract.balanceOf(tokenOwner),
-      ALICE_SUPPLY - BURNED_SUPPLY,
-      "invalid balance after burn"
-    );
+    assertEq(testContract.balanceOf(tokenOwner), ALICE_SUPPLY - BURNED_SUPPLY, 'invalid balance after burn');
   }
+
   function test_emitTransferEventWhen_caller_isApprovedForAll() public {
     address operator = OPERATOR.addr;
     address tokenOwner = ALICE.addr;
@@ -243,12 +224,7 @@ contract Unit_approve is Deployed {
     uint256 tokenId = TARGET_TOKEN;
     _burnFixture();
     vm.prank(operator);
-    vm.expectRevert(
-      abi.encodeWithSelector(
-        IERC721.IERC721_NONEXISTANT_TOKEN.selector,
-        tokenId
-      )
-    );
+    vm.expectRevert(abi.encodeWithSelector(IERC721.IERC721_NONEXISTANT_TOKEN.selector, tokenId));
     testContract.approve(approvedAccount, tokenId);
   }
 
@@ -417,12 +393,7 @@ contract Unit_safeTransferFrom is Deployed {
     uint256 tokenId = TARGET_TOKEN;
     _burnFixture();
     vm.prank(operator);
-    vm.expectRevert(
-      abi.encodeWithSelector(
-        IERC721.IERC721_NONEXISTANT_TOKEN.selector,
-        tokenId
-      )
-    );
+    vm.expectRevert(abi.encodeWithSelector(IERC721.IERC721_NONEXISTANT_TOKEN.selector, tokenId));
     testContract.safeTransferFrom(tokenOwner, recipient, tokenId);
   }
 
@@ -557,12 +528,7 @@ contract Unit_transferFrom is Deployed {
     uint256 tokenId = TARGET_TOKEN;
     _burnFixture();
     vm.prank(operator);
-    vm.expectRevert(
-      abi.encodeWithSelector(
-        IERC721.IERC721_NONEXISTANT_TOKEN.selector,
-        tokenId
-      )
-    );
+    vm.expectRevert(abi.encodeWithSelector(IERC721.IERC721_NONEXISTANT_TOKEN.selector, tokenId));
     testContract.transferFrom(tokenOwner, recipient, tokenId);
   }
 
@@ -660,35 +626,24 @@ contract Unit_TransferOwnership is Deployed {
   function test_revertWhen_caller_isNotContractOwner() public {
     address operator = OPERATOR.addr;
     vm.prank(operator);
-    vm.expectRevert(
-      abi.encodeWithSelector(
-        IERC173.IERC173_NOT_OWNER.selector,
-        operator
-      )
-    );
+    vm.expectRevert(abi.encodeWithSelector(IERC173.IERC173_NOT_OWNER.selector, operator));
     testContract.transferOwnership(operator);
   }
+
   function test_emitTransferOwnershipWhen_callerIsOwner() public {
     address newOwner = OPERATOR.addr;
     vm.expectEmit(address(testContract));
     emit OwnershipTransferred(address(this), newOwner);
     testContract.transferOwnership(newOwner);
-    assertEq(
-      testContract.owner(),
-      newOwner,
-      "invalid owner"
-    );
+    assertEq(testContract.owner(), newOwner, 'invalid owner');
   }
+
   function test_emitTransferOwnershipWhen_renouncingOwnership() public {
     address newOwner = OPERATOR.addr;
     vm.expectEmit(address(testContract));
     emit OwnershipTransferred(address(this), newOwner);
     testContract.transferOwnership(newOwner);
-    assertEq(
-      testContract.owner(),
-      newOwner,
-      "invalid owner"
-    );
+    assertEq(testContract.owner(), newOwner, 'invalid owner');
   }
 }
 // ***********
@@ -752,26 +707,19 @@ contract Unit_setRoyaltyInfo is Deployed {
     assertEq(royaltyAmount, expectedAmount, 'invalid royalty amount');
   }
 }
+
 contract Fuzz_setRoyaltyInfo is Deployed {
   function test_settingRoyalties_isSuccess(uint96 newRate, uint256 price) public {
     address newRecipient = OPERATOR.addr;
     newRate = uint96(bound(newRate, 1, ROYALTY_BASE));
     uint256 tokenId = TARGET_TOKEN;
-    price = bound(price, 100, 1e36); 
+    price = bound(price, 100, 1e36);
     address expectedRecipient = newRecipient;
     uint256 expectedAmount = price * newRate / ROYALTY_BASE;
     testContract.setRoyaltyInfo(newRecipient, newRate);
     (address recipient, uint256 royaltyAmount) = testContract.royaltyInfo(tokenId, price);
-    assertEq(
-      recipient,
-      expectedRecipient,
-      "invalid royalty recipient"
-    );
-    assertEq(
-      royaltyAmount,
-      expectedAmount,
-      "invalid royalty amount"
-    );
+    assertEq(recipient, expectedRecipient, 'invalid royalty recipient');
+    assertEq(royaltyAmount, expectedAmount, 'invalid royalty amount');
   }
 }
 // ************
@@ -822,11 +770,7 @@ contract Unit_supportsInterface is Deployed {
 // ***********
 contract Unit_Owner is Deployed {
   function test_contractOwner_isCorrect() public {
-    assertEq(
-      testContract.owner(),
-      address(this),
-      "invalid owner"
-    );
+    assertEq(testContract.owner(), address(this), 'invalid owner');
   }
 }
 // ***********
@@ -862,12 +806,7 @@ contract Unit_getApproved is Deployed {
   function test_revertWhen_token_isBurned() public {
     uint256 tokenId = TARGET_TOKEN;
     _burnFixture();
-    vm.expectRevert(
-      abi.encodeWithSelector(
-        IERC721.IERC721_NONEXISTANT_TOKEN.selector,
-        tokenId
-      )
-    );
+    vm.expectRevert(abi.encodeWithSelector(IERC721.IERC721_NONEXISTANT_TOKEN.selector, tokenId));
     testContract.getApproved(tokenId);
   }
 
@@ -895,12 +834,7 @@ contract Unit_ownerOf is Deployed {
   function test_revertWhen_token_isBurned() public {
     uint256 tokenId = TARGET_TOKEN;
     _burnFixture();
-    vm.expectRevert(
-      abi.encodeWithSelector(
-        IERC721.IERC721_NONEXISTANT_TOKEN.selector,
-        tokenId
-      )
-    );
+    vm.expectRevert(abi.encodeWithSelector(IERC721.IERC721_NONEXISTANT_TOKEN.selector, tokenId));
     testContract.ownerOf(tokenId);
   }
 
@@ -914,18 +848,9 @@ contract Fuzz_ownerOf is Deployed {
   function test_ownerOfExistingToken_isAccurate(uint256 tokenId) public {
     vm.assume(tokenId < MINTED_SUPPLY);
     if (tokenId == BOB_TOKEN) {
-      assertEq(
-        testContract.ownerOf(tokenId),
-        BOB.addr,
-        "invalid owner"
-      );
-    }
-    else {
-      assertEq(
-        testContract.ownerOf(tokenId),
-        ALICE.addr,
-        "invalid owner"
-      );
+      assertEq(testContract.ownerOf(tokenId), BOB.addr, 'invalid owner');
+    } else {
+      assertEq(testContract.ownerOf(tokenId), ALICE.addr, 'invalid owner');
     }
   }
 }
@@ -950,11 +875,7 @@ contract Unit_tokenByIndex is Deployed {
 contract Fuzz_TokenByIndex is Deployed {
   function test_tokenByIndex_isAccurate(uint256 index) public {
     vm.assume(index < MINTED_SUPPLY);
-    assertEq(
-      testContract.tokenByIndex(index),
-      index,
-      "invalid index"
-    );
+    assertEq(testContract.tokenByIndex(index), index, 'invalid index');
   }
 }
 
@@ -985,18 +906,9 @@ contract Fuzz_TokenOfOwnerByIndex is Deployed {
   function test_tokenOfOwnerByIndex_isAccurate(uint256 index) public {
     vm.assume(index < MINTED_SUPPLY - BOB_SUPPLY);
     if (index < ALICE_INIT_SUPPLY) {
-      assertEq(
-        testContract.tokenOfOwnerByIndex(ALICE.addr, index),
-        index,
-        "invalid token id"
-      );
-    }
-    else {
-      assertEq(
-        testContract.tokenOfOwnerByIndex(ALICE.addr, index),
-        index + BOB_SUPPLY,
-        "invalid token id"
-      );
+      assertEq(testContract.tokenOfOwnerByIndex(ALICE.addr, index), index, 'invalid token id');
+    } else {
+      assertEq(testContract.tokenOfOwnerByIndex(ALICE.addr, index), index + BOB_SUPPLY, 'invalid token id');
     }
   }
 }
@@ -1008,11 +920,7 @@ contract Unit_totalSupply is Deployed {
 
   function test_totalSupply_isAccurate_afterBurning() public {
     _burnFixture();
-    assertEq(
-      testContract.totalSupply(),
-      MINTED_SUPPLY - BURNED_SUPPLY,
-      "invalid total supply"
-    );
+    assertEq(testContract.totalSupply(), MINTED_SUPPLY - BURNED_SUPPLY, 'invalid total supply');
   }
 }
 // *********************
@@ -1042,12 +950,7 @@ contract Unit_tokenURI is Deployed {
   function test_revertWhen_token_isBurned() public {
     uint256 tokenId = TARGET_TOKEN;
     _burnFixture();
-    vm.expectRevert(
-      abi.encodeWithSelector(
-        IERC721.IERC721_NONEXISTANT_TOKEN.selector,
-        tokenId
-      )
-    );
+    vm.expectRevert(abi.encodeWithSelector(IERC721.IERC721_NONEXISTANT_TOKEN.selector, tokenId));
     testContract.tokenURI(tokenId);
   }
 
@@ -1067,7 +970,7 @@ contract Fuzz_tokenURI is Deployed {
     assertEq(
       keccak256(abi.encodePacked(testContract.tokenURI(tokenId))),
       keccak256(abi.encodePacked(BASE_URI, Strings.toString(tokenId))),
-      "invalid uri"
+      'invalid uri'
     );
   }
 }
@@ -1083,53 +986,30 @@ contract Unit_royaltyInfo is Deployed {
     address expectedRecipient = address(0);
     uint256 expectedAmount = 0;
     (address recipient, uint256 royaltyAmount) = testContract.royaltyInfo(tokenId, price);
-    assertEq(
-      recipient,
-      expectedRecipient,
-      "invalid royalty recipient"
-    );
-    assertEq(
-      royaltyAmount,
-      expectedAmount,
-      "invalid royalty amount"
-    );
+    assertEq(recipient, expectedRecipient, 'invalid royalty recipient');
+    assertEq(royaltyAmount, expectedAmount, 'invalid royalty amount');
   }
+
   function test_royaltyInfo_isAccurate() public {
     uint256 tokenId = TARGET_TOKEN;
     uint256 price = 1 ether;
     address expectedRecipient = ROYALTY_RECIPIENT.addr;
     uint256 expectedAmount = price * ROYALTY_RATE / ROYALTY_BASE;
     (address recipient, uint256 royaltyAmount) = testContract.royaltyInfo(tokenId, price);
-    assertEq(
-      recipient,
-      expectedRecipient,
-      "invalid royalty recipient"
-    );
-    assertEq(
-      royaltyAmount,
-      expectedAmount,
-      "invalid royalty amount"
-    );
+    assertEq(recipient, expectedRecipient, 'invalid royalty recipient');
+    assertEq(royaltyAmount, expectedAmount, 'invalid royalty amount');
   }
 }
 
 contract Fuzz_royaltyInfo is Deployed {
   function test_royaltyInfo_isAccurate(uint256 price) public {
     uint256 tokenId = TARGET_TOKEN;
-    price = bound(price, 100, 1e36); 
+    price = bound(price, 100, 1e36);
     address expectedRecipient = ROYALTY_RECIPIENT.addr;
     uint256 expectedAmount = price * ROYALTY_RATE / ROYALTY_BASE;
     (address recipient, uint256 royaltyAmount) = testContract.royaltyInfo(tokenId, price);
-    assertEq(
-      recipient,
-      expectedRecipient,
-      "invalid royalty recipient"
-    );
-    assertEq(
-      royaltyAmount,
-      expectedAmount,
-      "invalid royalty amount"
-    );
+    assertEq(recipient, expectedRecipient, 'invalid royalty recipient');
+    assertEq(royaltyAmount, expectedAmount, 'invalid royalty amount');
   }
 }
 // ************
