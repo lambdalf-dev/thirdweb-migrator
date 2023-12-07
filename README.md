@@ -50,3 +50,8 @@ To deploy, run the following:
 - `src`: The list of contracts included in the library.
 - `lib`: A list of libraries necessary to run forge test suite.
 - `test`: The foundry test suite for the repository.
+
+## Testnet deployment
+
+- [Migrated721 implementation](https://goerli.etherscan.io/address/0xDC2998c2F22f4f584945EF27107a6c56FfeF1DC5#code)
+- [Migrated721 factory](https://goerli.etherscan.io/address/0xDC2998c2F22f4f584945EF27107a6c56FfeF1DC5#code)

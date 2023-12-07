@@ -23,8 +23,8 @@ async function main() {
     ADMIN_ADDRESS,
     ROYALTY_RECIPIENT,
     ROYALTY_RATE,
-    ADMIN_ADDRESS,
-    ROYALTY_RATE
+    ROYALTY_RATE,
+    ADMIN_ADDRESS
   )
 
   const implementation_artifact = await hre.ethers.getContractFactory(IMPLEMENTATION_NAME)
@@ -58,8 +58,6 @@ async function main() {
     SYMBOL,
     BASE_URI
   )
-  await clone.deployed()
-  console.log(`Clone deployed to ${ clone.address }`)
 }
 
 main()
