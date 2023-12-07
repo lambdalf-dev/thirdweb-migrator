@@ -1,0 +1,38 @@
+{
+  "name": "thirdweb-migrator",
+  "version": "1.0.0",
+  "description": "A tool for people to cheaply migrate out of their vulnerable Thirdweb NFT contract",
+  "main": "index.js",
+  "author": "Lambdalf the White <lambdalf.dev@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "forge build",
+    "test": "forge test",
+    "test:verbose": "forge test -vvvv",
+    "coverage": "forge coverage --contracts contracts --report lcov; genhtml lcov.info --branch-coverage --output-directory foundry-coverage",
+    "deploy:goerli": "npx hardhat run scripts/deploy_test.js --network goerli",
+    "deploy:mainnet": "npx hardhat run scripts/deploy_main.js --network mainnet"
+  },
+  "dependencies": {
+    "@lambdalf-dev/ethereum-contracts": "^2.0.2"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.4",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.6",
+    "@nomiclabs/hardhat-ethers": "^2.2.1",
+    "@nomiclabs/hardhat-etherscan": "^3.1.2",
+    "@nomiclabs/hardhat-solhint": "^3.0.0",
+    "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1",
+    "cross-env": "7.0.3",
+    "dotenv": "^16.0.3",
+    "ethers": "^5.7.2",
+    "hardhat": "^2.12.1-ir.0",
+    "hardhat-gas-reporter": "^1.0.4",
+    "hardhat-watcher": "^2.5.0",
+    "husky": ">=8",
+    "lint-staged": "11.1.4",
+    "solidity-coverage": "^0.8.2",
+    "sort-package-json": "1.53.1"
+  }
+}
