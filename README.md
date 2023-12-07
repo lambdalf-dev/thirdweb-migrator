@@ -54,4 +54,4 @@ To deploy, run the following:
 ## Testnet deployment
 
 - [Migrated721 implementation](https://goerli.etherscan.io/address/0xDC2998c2F22f4f584945EF27107a6c56FfeF1DC5#code)
-- [Migrated721 factory](https://goerli.etherscan.io/address/0xDC2998c2F22f4f584945EF27107a6c56FfeF1DC5#code)
+- [Migrated721 factory](https://goerli.etherscan.io/address/0x36d27fD66160395E52F579F60252bd108f4B8546#code)
