@@ -8,7 +8,7 @@ async function main() {
   const ADMIN_ADDRESS     = process.env.TEST_DEV_ADDRESS                 // Address of the deployer
   const ROYALTY_RECIPIENT = ADMIN_ADDRESS                                // Address receiving royalties
   const ROYALTY_RATE      = 500                                          // Royalty rate, in bps (1% = 100)
-  const SUPPLY            = 10                                           // Collection total supply
+  const SUPPLY            = 2                                            // Collection total supply
   const NAME              = "NFT Collection"                             // Collection name
   const SYMBOL            = "NFT"                                        // Collection symbol
   const BASE_URI          = "https://api.example.com/metadata/"          // Collection base metadata URI

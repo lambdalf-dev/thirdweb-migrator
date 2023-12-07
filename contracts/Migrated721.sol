@@ -90,6 +90,12 @@ contract Migrated721 is
     _init_ERC2981(royaltyRecipient_, royaltyRate_);
   }
 
+  function indexTokens(uint256 fromTokenId_, uint256 toTokenId_) public {
+    for (uint256 i = fromTokenId_; i < toTokenId_; ++i) {
+      emit Transfer(address(0), ownerOf(i), i);
+    }
+  }
+
   // **************************************
   // *****          FALLBACK          *****
   // **************************************
