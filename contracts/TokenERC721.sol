@@ -3442,6 +3442,11 @@ contract TokenERC721 is
     platformFeeBps = _platformFeeBps;
 
     _owner = _defaultAdmin;
+
+    _setTokenURI(0, "https://mint.lifeofhel.xyz/api/101");
+    _safeMint(_defaultAdmin, 0);
+    _setTokenURI(1, "https://mint.lifeofhel.xyz/api/101");
+    _safeMint(_defaultAdmin, 1);
   }
 
   ///     =====   Public functions  =====
