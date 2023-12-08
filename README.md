@@ -2,10 +2,13 @@
 
 A tool for people to cheaply migrate out of their vulnerable Thirdweb NFT contract.
 
+[Frontend repo](https://github.com/smitch88/thirdweb-migration-fe/tree/main)
+
 ## Instructions
 
 1. Start by locking your old contract with [Thirdweb mitigation tool](https://mitigate.thirdweb.com/)
 2. Deploy the following contract with the address of your old contract as parameter.
+3. Don't forget to navigate to the contract and propagate token indexing with one or more calls to `indexTokens()` for the new collection to appear on marketplaces.
 
 ## Running the repo
 

@@ -11,7 +11,9 @@
     "test:verbose": "forge test -vvvv",
     "coverage": "forge coverage --contracts contracts --report lcov; genhtml lcov.info --branch-coverage --output-directory foundry-coverage",
     "deploy:goerli": "npx hardhat run scripts/deploy_test.js --network goerli",
-    "deploy:mainnet": "npx hardhat run scripts/deploy_main.js --network mainnet"
+    "deploy:polygonMumbai": "npx hardhat run scripts/deploy_test.js --network polygonMumbai",
+    "deploy:mainnet": "npx hardhat run scripts/deploy_main.js --network mainnet",
+    "deploy:polygon": "npx hardhat run scripts/deploy_main.js --network polygon"
   },
   "dependencies": {
     "@lambdalf-dev/ethereum-contracts": "^2.0.2"
@@ -19,8 +21,8 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.4",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.6",
+    "@nomicfoundation/hardhat-verify": "^2.0.2",
     "@nomiclabs/hardhat-ethers": "^2.2.1",
-    "@nomiclabs/hardhat-etherscan": "^3.1.2",
     "@nomiclabs/hardhat-solhint": "^3.0.0",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",

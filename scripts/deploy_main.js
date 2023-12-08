@@ -7,16 +7,16 @@ async function main() {
   const implementation_artifact = await hre.ethers.getContractFactory(IMPLEMENTATION_NAME)
   const implementation = await implementation_artifact.deploy()
   await implementation.deployed()
-  await implementation.initialize(
-    hre.ethers.constants.AddressZero,
-    hre.ethers.constants.AddressZero,
-    hre.ethers.constants.AddressZero,
-    0,
-    0,
-    "",
-    "",
-    ""
-  )
+  // await implementation.initialize(
+  //   hre.ethers.constants.AddressZero,
+  //   hre.ethers.constants.AddressZero,
+  //   hre.ethers.constants.AddressZero,
+  //   0,
+  //   0,
+  //   "",
+  //   "",
+  //   ""
+  // )
   console.log(`${ IMPLEMENTATION_NAME } deployed to ${ implementation.address }`)
 
   const factory_artifact = await hre.ethers.getContractFactory(FACTORY_NAME)
