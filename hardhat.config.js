@@ -27,6 +27,10 @@ module.exports = {
       url: `https://polygon-mainnet.g.alchemy.com/v2/${ process.env.ALCHEMY_API_KEY }`,
       accounts: [ process.env.MAIN_DEV_PRIVATE_KEY ],
     },
+    optimism: {
+      url: `https://opt-mainnet.g.alchemy.com/v2/${ process.env.ALCHEMY_API_KEY }`,
+      accounts: [ process.env.MAIN_DEV_PRIVATE_KEY ],
+    },
   },
   etherscan: {
     apiKey: {

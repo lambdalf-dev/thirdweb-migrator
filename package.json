@@ -13,7 +13,8 @@
     "deploy:goerli": "npx hardhat run scripts/deploy_test.js --network goerli",
     "deploy:polygonMumbai": "npx hardhat run scripts/deploy_test.js --network polygonMumbai",
     "deploy:mainnet": "npx hardhat run scripts/deploy_main.js --network mainnet",
-    "deploy:polygon": "npx hardhat run scripts/deploy_main.js --network polygon"
+    "deploy:polygon": "npx hardhat run scripts/deploy_main.js --network polygon",
+    "deploy:optimism": "npx hardhat run scripts/deploy_main.js --network optimism"
   },
   "dependencies": {
     "@lambdalf-dev/ethereum-contracts": "^2.0.2"
